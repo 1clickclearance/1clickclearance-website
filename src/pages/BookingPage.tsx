@@ -356,6 +356,33 @@ const BookingPage: React.FC = () => {
               ))}
             </div>
           </div>
+
+          {/* Progress Indicator with Helpful Prompts */}
+          <div className="mt-4 text-center">
+            {step === 1 && (
+              <p className="text-gray-600">Choose the service that best fits your clearance needs</p>
+            )}
+            {step === 2 && (
+              <p className="text-gray-600">
+                <span className="font-semibold text-brand-dark">Step 2 of 5:</span> Enter your details and preview available time slots
+              </p>
+            )}
+            {step === 3 && (
+              <p className="text-gray-600">
+                <span className="font-semibold text-brand-dark">Step 3 of 5:</span> Secure payment to confirm your booking
+              </p>
+            )}
+            {step === 4 && (
+              <p className="text-gray-600">
+                <span className="font-semibold text-brand-dark">Step 4 of 5:</span> Select your preferred collection time
+              </p>
+            )}
+            {step === 5 && (
+              <p className="text-gray-600">
+                <span className="font-semibold text-brand-dark">Booking Complete!</span> Your collection is confirmed
+              </p>
+            )}
+          </div>
         </div>
       </div>
 
@@ -398,124 +425,198 @@ const BookingPage: React.FC = () => {
           </div>
         )}
 
-        {/* Step 2: Customer Details */}
+        {/* Step 2: Customer Details + Calendar Preview */}
         {step === 2 && (
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-brand-dark mb-4">Your Details</h2>
-              <p className="text-gray-600">Please provide your contact and collection details</p>
+              <h2 className="text-2xl font-bold text-brand-dark mb-4">Your Details & Available Times</h2>
+              <p className="text-gray-600 mb-4">
+                Enter your contact details and preview available collection times
+              </p>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800 max-w-2xl mx-auto">
+                <p className="font-semibold mb-1">📅 What's Next:</p>
+                <p>After entering your details and completing payment, you'll be able to select your preferred collection time from the calendar below.</p>
+              </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-lg p-8">
-              <form onSubmit={handleCustomerDetailsSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Customer Details Form */}
+              <div className="bg-white rounded-lg shadow-lg p-8">
+                <h3 className="text-xl font-bold text-brand-dark mb-6">Contact & Collection Details</h3>
+
+                <form onSubmit={handleCustomerDetailsSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-brand-dark mb-2">
+                        Full Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={bookingData.customerDetails.name}
+                        onChange={(e) => setBookingData(prev => ({
+                          ...prev,
+                          customerDetails: { ...prev.customerDetails, name: e.target.value }
+                        }))}
+                        className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-green focus:border-transparent"
+                        placeholder="Enter your full name"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-brand-dark mb-2">
+                        Email Address *
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        value={bookingData.customerDetails.email}
+                        onChange={(e) => setBookingData(prev => ({
+                          ...prev,
+                          customerDetails: { ...prev.customerDetails, email: e.target.value }
+                        }))}
+                        className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-green focus:border-transparent"
+                        placeholder="your.email@example.com"
+                      />
+                    </div>
+                  </div>
+
                   <div>
                     <label className="block text-sm font-semibold text-brand-dark mb-2">
-                      Full Name *
+                      Phone Number *
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={bookingData.customerDetails.phone}
+                      onChange={(e) => setBookingData(prev => ({
+                        ...prev,
+                        customerDetails: { ...prev.customerDetails, phone: e.target.value }
+                      }))}
+                      className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-green focus:border-transparent"
+                      placeholder="e.g. 07775 605848"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-brand-dark mb-2">
+                      Collection Address *
+                    </label>
+                    <textarea
+                      required
+                      rows={3}
+                      value={bookingData.customerDetails.address}
+                      onChange={(e) => setBookingData(prev => ({
+                        ...prev,
+                        customerDetails: { ...prev.customerDetails, address: e.target.value }
+                      }))}
+                      className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-green focus:border-transparent"
+                      placeholder="Enter full collection address"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-brand-dark mb-2">
+                      Postcode *
                     </label>
                     <input
                       type="text"
                       required
-                      value={bookingData.customerDetails.name}
+                      value={bookingData.customerDetails.postcode}
                       onChange={(e) => setBookingData(prev => ({
                         ...prev,
-                        customerDetails: { ...prev.customerDetails, name: e.target.value }
+                        customerDetails: { ...prev.customerDetails, postcode: e.target.value }
                       }))}
                       className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-green focus:border-transparent"
+                      placeholder="CB1 2AB"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-semibold text-brand-dark mb-2">
-                      Email Address *
+                      Special Instructions (Optional)
                     </label>
-                    <input
-                      type="email"
-                      required
-                      value={bookingData.customerDetails.email}
+                    <textarea
+                      rows={3}
+                      value={bookingData.customerDetails.specialInstructions}
                       onChange={(e) => setBookingData(prev => ({
                         ...prev,
-                        customerDetails: { ...prev.customerDetails, email: e.target.value }
+                        customerDetails: { ...prev.customerDetails, specialInstructions: e.target.value }
                       }))}
                       className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-green focus:border-transparent"
+                      placeholder="Any access issues, specific items, or additional information..."
                     />
+                  </div>
+
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div className="flex items-center mb-2">
+                      <svg className="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span className="font-semibold text-green-800">Next: Secure Payment</span>
+                    </div>
+                    <p className="text-sm text-green-700">
+                      After completing payment, you'll select your preferred time from the available slots shown on the right.
+                    </p>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full btn-primary text-lg py-3"
+                  >
+                    Continue to Payment →
+                  </button>
+                </form>
+              </div>
+
+              {/* Calendar Preview (Disabled) */}
+              <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div className="bg-gray-50 p-4 border-b">
+                  <h3 className="text-xl font-bold text-brand-dark mb-2">Preview: Available Collection Times</h3>
+                  <p className="text-sm text-gray-600">
+                    These are the available time slots for your collection. Complete payment to select your preferred time.
+                  </p>
+                </div>
+
+                {/* Calendar Preview with Disabled Overlay */}
+                <div className="relative">
+                  <div className="relative w-full" style={{ height: '500px' }}>
+                    <iframe
+                      src="https://calendar.motion.com/meet/1clickclearance/book"
+                      width="100%"
+                      height="100%"
+                      frameBorder="0"
+                      title="Preview available collection times"
+                      className="w-full h-full"
+                    />
+
+                    {/* Disabled Overlay */}
+                    <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
+                      <div className="text-center p-6 bg-white rounded-lg shadow-lg border-2 border-brand-green max-w-sm">
+                        <div className="text-4xl mb-4">🔒</div>
+                        <h4 className="font-bold text-brand-dark mb-2">Calendar Locked</h4>
+                        <p className="text-sm text-gray-600 mb-4">
+                          Complete your payment in the next step to unlock time selection
+                        </p>
+                        <div className="text-xs text-gray-500">
+                          Your payment is secured by Stripe
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-brand-dark mb-2">
-                    Phone Number *
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    value={bookingData.customerDetails.phone}
-                    onChange={(e) => setBookingData(prev => ({
-                      ...prev,
-                      customerDetails: { ...prev.customerDetails, phone: e.target.value }
-                    }))}
-                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-green focus:border-transparent"
-                    placeholder="e.g. 07775 605848"
-                  />
+                {/* Calendar Features Info */}
+                <div className="p-4 bg-blue-50 border-t">
+                  <h4 className="font-semibold text-brand-dark mb-2">🤖 AI-Powered Scheduling</h4>
+                  <ul className="text-sm text-blue-800 space-y-1">
+                    <li>• 30-minute collection slots optimized for efficiency</li>
+                    <li>• Route optimization for faster service</li>
+                    <li>• Maximum 6 bookings per day for quality</li>
+                    <li>• Real-time availability updates</li>
+                  </ul>
                 </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-brand-dark mb-2">
-                    Collection Address *
-                  </label>
-                  <textarea
-                    required
-                    rows={3}
-                    value={bookingData.customerDetails.address}
-                    onChange={(e) => setBookingData(prev => ({
-                      ...prev,
-                      customerDetails: { ...prev.customerDetails, address: e.target.value }
-                    }))}
-                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-green focus:border-transparent"
-                    placeholder="Enter full collection address"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-brand-dark mb-2">
-                    Postcode *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={bookingData.customerDetails.postcode}
-                    onChange={(e) => setBookingData(prev => ({
-                      ...prev,
-                      customerDetails: { ...prev.customerDetails, postcode: e.target.value }
-                    }))}
-                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-green focus:border-transparent"
-                    placeholder="CB1 2AB"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-brand-dark mb-2">
-                    Special Instructions (Optional)
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={bookingData.customerDetails.specialInstructions}
-                    onChange={(e) => setBookingData(prev => ({
-                      ...prev,
-                      customerDetails: { ...prev.customerDetails, specialInstructions: e.target.value }
-                    }))}
-                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-green focus:border-transparent"
-                    placeholder="Any access issues, specific items, or additional information..."
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full btn-primary text-lg py-3"
-                >
-                  Continue to Payment
-                </button>
-              </form>
+              </div>
             </div>
           </div>
         )}
@@ -525,7 +626,11 @@ const BookingPage: React.FC = () => {
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-2xl font-bold text-brand-dark mb-4">Secure Payment</h2>
-              <p className="text-gray-600">Complete your booking with secure card payment</p>
+              <p className="text-gray-600 mb-4">Complete your booking with secure card payment</p>
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-sm text-green-800 max-w-md mx-auto">
+                <p className="font-semibold mb-1">✨ Almost there!</p>
+                <p>After payment, you'll select your collection time from the available slots.</p>
+              </div>
             </div>
 
             <div className="bg-white rounded-lg shadow-lg p-8">
@@ -569,22 +674,19 @@ const BookingPage: React.FC = () => {
           </div>
         )}
 
-        {/* Step 4: Motion Calendar Scheduling */}
+        {/* Step 4: Motion Calendar Scheduling (Now Enabled) */}
         {step === 4 && (
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-brand-dark mb-4">Schedule Your Collection</h2>
+              <h2 className="text-2xl font-bold text-brand-dark mb-4">
+                <span className="text-green-500">✓</span> Payment Complete - Select Your Time
+              </h2>
               <p className="text-gray-600 mb-4">
-                Our AI-powered scheduling system will find the optimal time for your collection
+                Great! Your payment has been processed. Now select your preferred collection time.
               </p>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-                <p className="font-semibold mb-2">Smart Scheduling Features:</p>
-                <ul className="list-disc list-inside space-y-1">
-                  <li>30-minute collection slots with route optimization</li>
-                  <li>Automatic 30-minute buffer between jobs</li>
-                  <li>Maximum 6 bookings per day for quality service</li>
-                  <li>Real-time availability based on location and team capacity</li>
-                </ul>
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-sm text-green-800 max-w-md mx-auto">
+                <p className="font-semibold mb-1">🎉 Booking Unlocked!</p>
+                <p>Choose any available time slot below to complete your booking.</p>
               </div>
             </div>
 
@@ -603,20 +705,20 @@ const BookingPage: React.FC = () => {
 
               {/* Instructions below calendar */}
               <div className="p-6 bg-gray-50 border-t">
-                <h4 className="font-semibold text-brand-dark mb-3">Next Steps:</h4>
-                <ol className="list-decimal list-inside space-y-2 text-sm text-gray-700">
+                <h4 className="font-semibold text-brand-dark mb-3">📋 Final Steps:</h4>
+                <ol className="list-decimal list-inside space-y-2 text-sm text-gray-700 mb-6">
                   <li>Select your preferred date and time from the calendar above</li>
                   <li>You'll receive a confirmation email with collection details</li>
                   <li>Our team will contact you 30 minutes before arrival</li>
                   <li>Payment has been processed - no additional charges on collection day</li>
                 </ol>
 
-                <div className="mt-6 flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-4">
                   <button
                     onClick={handleSchedulingComplete}
                     className="btn-primary flex-1"
                   >
-                    Scheduling Complete - View Summary
+                    I've Selected My Time - Complete Booking
                   </button>
                   <a
                     href="/contact"
@@ -650,7 +752,7 @@ const BookingPage: React.FC = () => {
                     <div className="ml-4 space-y-1">
                       {Object.keys(prefilledData.selectedItems).map(key => {
                         const [itemName, priceStr] = key.split('_');
-                        const quantity = prefilledData.selectedItems![key];
+                        const quantity = prefilledData.selectedItems?.[key];
                         return (
                           <p key={key} className="text-sm">• {quantity}x {itemName}</p>
                         );
@@ -671,6 +773,16 @@ const BookingPage: React.FC = () => {
                 <p className="text-sm text-gray-600">
                   A confirmation email has been sent to {bookingData.customerDetails.email}
                 </p>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+                  <p className="font-semibold mb-2">📧 What happens next:</p>
+                  <ul className="text-left space-y-1">
+                    <li>• Confirmation email sent to your inbox</li>
+                    <li>• Calendar invite for your selected time</li>
+                    <li>• Call 30 minutes before arrival</li>
+                    <li>• Professional, insured team arrives</li>
+                  </ul>
+                </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <a href="/" className="btn-primary">
