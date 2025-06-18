@@ -1,11 +1,9 @@
 import type React from 'react';
 import { useState, useEffect } from 'react';
-import DatePicker from 'react-datepicker';
-import { format, addDays, isWeekend, setHours, setMinutes } from 'date-fns';
+import { format } from 'date-fns';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { trackCTAClick, trackFormStart, trackFormSubmit } from '../utils/analytics';
-import 'react-datepicker/dist/react-datepicker.css';
 
 // Initialize Stripe with environment variable
 const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
@@ -297,32 +295,9 @@ const BookingPage: React.FC = () => {
     trackFormStart('booking_flow');
   }, []);
 
-  // Generate available dates (next 30 days, excluding weekends)
-  const getAvailableDates = () => {
-    const dates = [];
-    let currentDate = addDays(new Date(), 1); // Start from tomorrow
-
-    while (dates.length < 30) {
-      if (!isWeekend(currentDate)) {
-        dates.push(new Date(currentDate));
-      }
-      currentDate = addDays(currentDate, 1);
-    }
-
-    return dates;
-  };
-
   const handleServiceSelect = (service: ServiceOption) => {
     setBookingData(prev => ({ ...prev, service }));
     setStep(2);
-  };
-
-  const handleDateSelect = (date: Date | null) => {
-    if (date) {
-      setBookingData(prev => ({ ...prev, date, timeSlot: 'flexible' }));
-      // Automatically proceed to next step when date is selected
-      setStep(3);
-    }
   };
 
   const handleCustomerDetailsSubmit = (e: React.FormEvent) => {
@@ -422,55 +397,50 @@ const BookingPage: React.FC = () => {
         {step === 2 && (
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-brand-dark mb-4">Choose Collection Date</h2>
-              <p className="text-gray-600">Select your preferred collection date. We'll contact you to arrange the most efficient collection time.</p>
+              <h2 className="text-2xl font-bold text-brand-dark mb-4">Schedule Your Collection</h2>
+              <p className="text-gray-600">Select your preferred date and time slot. Our AI-optimized calendar ensures the most efficient routing.</p>
             </div>
 
             <div className="bg-white rounded-lg shadow-lg p-8">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="text-lg font-semibold text-brand-dark mb-4">Select Date</h3>
-                  <DatePicker
-                    selected={bookingData.date}
-                    onChange={handleDateSelect}
-                    includeDates={getAvailableDates()}
-                    inline
-                    minDate={addDays(new Date(), 1)}
-                    className="w-full"
-                  />
-                  <p className="text-sm text-gray-500 mt-2">
-                    Available Monday to Friday. Same-day booking available by phone.
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-brand-dark mb-4">Available Time Slots</h3>
+                <div className="p-4 bg-blue-50 rounded-lg mb-6">
+                  <p className="text-sm text-gray-700">
+                    <strong>Smart Scheduling:</strong> Our AI calendar shows you the most efficient time slots based on location and route optimization.
                   </p>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold text-brand-dark mb-4">Collection Times</h3>
-                  <div className="p-4 bg-blue-50 rounded-lg">
-                    <p className="text-sm text-gray-700">
-                      <strong>Flexible Collection Times:</strong> We operate Monday to Friday and will contact you to arrange the most efficient collection time for your area (typically between 8AM-6PM).
-                    </p>
-                    <p className="text-sm text-gray-600 mt-2">
-                      This allows us to create the most efficient routes and provide you with the best service.
-                    </p>
-                  </div>
+                  <p className="text-sm text-gray-600 mt-2">
+                    • 30-minute collection windows<br/>
+                    • Maximum 6 bookings per day<br/>
+                    • Optimized routing for efficiency
+                  </p>
                 </div>
               </div>
 
-              {bookingData.date && (
-                <div className="mt-8 p-4 bg-green-50 rounded-lg">
-                  <h4 className="font-semibold text-brand-dark mb-2">Booking Summary</h4>
-                  <p><strong>Service:</strong> {bookingData.service?.name} - £{bookingData.service?.price}</p>
-                  <p><strong>Date:</strong> {format(bookingData.date, 'EEEE, dd MMMM yyyy')}</p>
-                  <p><strong>Collection Time:</strong> We'll contact you to arrange the best time</p>
+              {/* Motion Calendar Embed - Replace MOTION_BOOKING_URL with your actual URL */}
+              <div className="motion-calendar-container">
+                <iframe
+                  src="https://app.usemotion.com/meet/darren-mould-2jyj/clearance?d=30"
+                  width="100%"
+                  height="650"
+                  frameBorder="0"
+                  title="Schedule Collection Time"
+                  className="rounded-lg border border-gray-200 shadow-sm"
+                  allow="camera; microphone; autoplay; encrypted-media; fullscreen; display-capture"
+                ></iframe>
+              </div>
 
-                  <button
-                    onClick={() => setStep(3)}
-                    className="mt-4 btn-primary"
-                  >
-                    Continue to Details
-                  </button>
-                </div>
-              )}
+              <div className="mt-6 p-4 bg-green-50 rounded-lg">
+                <h4 className="font-semibold text-brand-dark mb-2">After Scheduling Your Collection</h4>
+                <p className="text-sm text-gray-600">
+                  Once you've scheduled your collection time using Motion's calendar above, continue with your booking details and secure payment.
+                </p>
+                <button
+                  onClick={() => setStep(3)}
+                  className="mt-4 btn-primary"
+                >
+                  Continue to Customer Details
+                </button>
+              </div>
             </div>
           </div>
         )}
