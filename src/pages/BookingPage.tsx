@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { trackCTAClick, trackFormStart, trackFormSubmit } from '../utils/analytics';
+import { validatePostcode, type PostcodeValidationResult } from '../utils/postcodeValidation';
 
 // Initialize Stripe with environment variable
 const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
@@ -259,6 +260,8 @@ const BookingPage: React.FC = () => {
     pricingType?: string;
   } | null>(null);
 
+  const [postcodeValidation, setPostcodeValidation] = useState<PostcodeValidationResult | null>(null);
+
   useEffect(() => {
     // Load pre-filled booking data from localStorage
     const storedData = localStorage.getItem('bookingData');
@@ -300,8 +303,34 @@ const BookingPage: React.FC = () => {
     setStep(2);
   };
 
+  const handlePostcodeChange = (postcode: string) => {
+    setBookingData(prev => ({
+      ...prev,
+      customerDetails: { ...prev.customerDetails, postcode }
+    }));
+
+    // Validate postcode if it's long enough
+    if (postcode.trim().length >= 3) {
+      const validation = validatePostcode(postcode);
+      setPostcodeValidation(validation);
+    } else {
+      setPostcodeValidation(null);
+    }
+  };
+
   const handleCustomerDetailsSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Final postcode validation before proceeding
+    const validation = validatePostcode(bookingData.customerDetails.postcode);
+    setPostcodeValidation(validation);
+
+    if (!validation.isValid) {
+      // Don't proceed if postcode is not in coverage area
+      alert('Sorry, we don\'t provide online bookings in this postcode area. Please use our quote form instead.');
+      return;
+    }
+
     setStep(3); // Go to payment after customer details
   };
 
@@ -523,13 +552,44 @@ const BookingPage: React.FC = () => {
                       type="text"
                       required
                       value={bookingData.customerDetails.postcode}
-                      onChange={(e) => setBookingData(prev => ({
-                        ...prev,
-                        customerDetails: { ...prev.customerDetails, postcode: e.target.value }
-                      }))}
+                      onChange={(e) => handlePostcodeChange(e.target.value)}
                       className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-green focus:border-transparent"
                       placeholder="CB1 2AB"
                     />
+
+                    {/* Postcode validation feedback */}
+                    {postcodeValidation && (
+                      <div className={`mt-2 p-3 rounded-md ${
+                        postcodeValidation.type === 'success' ? 'bg-green-50 border border-green-200' :
+                        postcodeValidation.type === 'error' ? 'bg-red-50 border border-red-200' :
+                        'bg-blue-50 border border-blue-200'
+                      }`}>
+                        <p className={`text-sm ${
+                          postcodeValidation.type === 'success' ? 'text-green-800' :
+                          postcodeValidation.type === 'error' ? 'text-red-800' :
+                          'text-blue-800'
+                        }`}>
+                          {postcodeValidation.message}
+                        </p>
+
+                        {!postcodeValidation.isValid && postcodeValidation.type === 'info' && (
+                          <div className="mt-3 flex flex-col sm:flex-row gap-2">
+                            <a
+                              href="/quote-selection"
+                              className="btn-primary text-center text-sm py-2"
+                            >
+                              Request Quote Instead
+                            </a>
+                            <a
+                              href="/service-areas"
+                              className="btn-secondary text-center text-sm py-2"
+                            >
+                              View Coverage Areas
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   <div>
@@ -562,9 +622,17 @@ const BookingPage: React.FC = () => {
 
                   <button
                     type="submit"
-                    className="w-full btn-primary text-lg py-3"
+                    disabled={postcodeValidation ? !postcodeValidation.isValid : false}
+                    className={`w-full text-lg py-3 ${
+                      postcodeValidation && !postcodeValidation.isValid
+                        ? 'bg-gray-400 text-gray-700 cursor-not-allowed border border-gray-300 rounded-md'
+                        : 'btn-primary'
+                    }`}
                   >
-                    Continue to Payment →
+                    {postcodeValidation && !postcodeValidation.isValid
+                      ? 'Postcode Not in Service Area'
+                      : 'Continue to Payment →'
+                    }
                   </button>
                 </form>
               </div>

@@ -10,6 +10,7 @@ import SizeGuidePage from './pages/SizeGuidePage';
 import BookingPage from './pages/BookingPage';
 import QuoteSelectionPage from './pages/QuoteSelectionPage';
 import QuoteRequestPage from './pages/QuoteRequestPage';
+import ServiceAreasPage from './pages/ServiceAreasPage';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
                 <a href="/pricing" className="text-brand-dark hover:text-brand-green">Pricing</a>
                 <a href="/pricing" className="text-brand-dark hover:text-brand-green">Book Online</a>
                 <a href="/size-guide" className="text-brand-dark hover:text-brand-green">Size Guide</a>
+                <a href="/service-areas" className="text-brand-dark hover:text-brand-green">Service Areas</a>
                 <a href="/contact" className="text-brand-dark hover:text-brand-green">Contact</a>
               </nav>
             </div>
@@ -49,6 +51,7 @@ function App() {
             <Route path="/quote/garden" element={<QuoteRequestPage />} />
             <Route path="/quote/business" element={<QuoteRequestPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/service-areas" element={<ServiceAreasPage />} />
           </Routes>
         </main>
       </div>
