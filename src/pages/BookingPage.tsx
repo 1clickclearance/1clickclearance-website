@@ -340,8 +340,15 @@ const BookingPage: React.FC = () => {
   };
 
   const handleSchedulingComplete = () => {
-    setStep(5); // Go to confirmation after scheduling
-    trackCTAClick('booking_completed', 'scheduling_success', '/booking-confirmation');
+    // Store booking data for thank you page
+    localStorage.setItem('completedBooking', JSON.stringify({
+      ...bookingData,
+      prefilledData,
+      completedAt: new Date().toISOString()
+    }));
+
+    // Redirect to dedicated thank you page for better analytics tracking
+    window.location.href = '/booking-confirmation';
   };
 
   const handlePaymentError = (error: string) => {

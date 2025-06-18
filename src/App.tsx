@@ -11,6 +11,7 @@ import BookingPage from './pages/BookingPage';
 import QuoteSelectionPage from './pages/QuoteSelectionPage';
 import QuoteRequestPage from './pages/QuoteRequestPage';
 import ServiceAreasPage from './pages/ServiceAreasPage';
+import BookingConfirmationPage from './pages/BookingConfirmationPage';
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/book" element={<BookingPage />} />
+            <Route path="/booking-confirmation" element={<BookingConfirmationPage />} />
             <Route path="/size-guide" element={<SizeGuidePage />} />
             <Route path="/quote" element={<QuotePage />} />
             <Route path="/quote-selection" element={<QuoteSelectionPage />} />
