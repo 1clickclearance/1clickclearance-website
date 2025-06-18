@@ -171,7 +171,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ bookingData, prefilledData, o
             <div className="text-sm font-medium text-brand-dark mb-2">Selected Items:</div>
             {Object.keys(prefilledData.selectedItems).map(key => {
               const [itemName, priceStr] = key.split('_');
-              const price = parseInt(priceStr);
+              const price = Number.parseInt(priceStr);
               const quantity = prefilledData.selectedItems![key];
               return (
                 <div key={key} className="flex justify-between text-sm">
@@ -196,7 +196,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ bookingData, prefilledData, o
         )}
 
         <div className="text-sm text-gray-600 mt-2">
-          Date: {bookingData.date ? format(bookingData.date, 'dd/MM/yyyy') : 'Not selected'} (Collection time to be arranged)
+          Collection Time: To be scheduled via our AI-optimized booking system
         </div>
       </div>
 
@@ -237,7 +237,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ bookingData, prefilledData, o
 };
 
 const BookingPage: React.FC = () => {
-  const [step, setStep] = useState(2); // Skip service selection, start with date
+  const [step, setStep] = useState(2); // Skip service selection, start with customer details
   const [bookingData, setBookingData] = useState<BookingData>({
     service: null,
     date: null,
@@ -302,12 +302,17 @@ const BookingPage: React.FC = () => {
 
   const handleCustomerDetailsSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setStep(4);
+    setStep(3); // Go to payment after customer details
   };
 
   const handlePaymentSuccess = () => {
-    setStep(5);
-    trackCTAClick('booking_completed', 'payment_success', '/booking-confirmation');
+    setStep(4); // Go to calendar scheduling after payment
+    trackCTAClick('payment_completed', 'payment_success', '/booking-scheduling');
+  };
+
+  const handleSchedulingComplete = () => {
+    setStep(5); // Go to confirmation after scheduling
+    trackCTAClick('booking_completed', 'scheduling_success', '/booking-confirmation');
   };
 
   const handlePaymentError = (error: string) => {
@@ -393,60 +398,8 @@ const BookingPage: React.FC = () => {
           </div>
         )}
 
-        {/* Step 2: Date Selection */}
+        {/* Step 2: Customer Details */}
         {step === 2 && (
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-brand-dark mb-4">Schedule Your Collection</h2>
-              <p className="text-gray-600">Select your preferred date and time slot. Our AI-optimized calendar ensures the most efficient routing.</p>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-lg p-8">
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-brand-dark mb-4">Available Time Slots</h3>
-                <div className="p-4 bg-blue-50 rounded-lg mb-6">
-                  <p className="text-sm text-gray-700">
-                    <strong>Smart Scheduling:</strong> Our AI calendar shows you the most efficient time slots based on location and route optimization.
-                  </p>
-                  <p className="text-sm text-gray-600 mt-2">
-                    • 30-minute collection windows<br/>
-                    • Maximum 6 bookings per day<br/>
-                    • Optimized routing for efficiency
-                  </p>
-                </div>
-              </div>
-
-              {/* Motion Calendar Embed - Replace MOTION_BOOKING_URL with your actual URL */}
-              <div className="motion-calendar-container">
-                <iframe
-                  src="https://app.usemotion.com/meet/darren-mould-2jyj/clearance?d=30"
-                  width="100%"
-                  height="650"
-                  frameBorder="0"
-                  title="Schedule Collection Time"
-                  className="rounded-lg border border-gray-200 shadow-sm"
-                  allow="camera; microphone; autoplay; encrypted-media; fullscreen; display-capture"
-                ></iframe>
-              </div>
-
-              <div className="mt-6 p-4 bg-green-50 rounded-lg">
-                <h4 className="font-semibold text-brand-dark mb-2">After Scheduling Your Collection</h4>
-                <p className="text-sm text-gray-600">
-                  Once you've scheduled your collection time using Motion's calendar above, continue with your booking details and secure payment.
-                </p>
-                <button
-                  onClick={() => setStep(3)}
-                  className="mt-4 btn-primary"
-                >
-                  Continue to Customer Details
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Step 3: Customer Details */}
-        {step === 3 && (
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-2xl font-bold text-brand-dark mb-4">Your Details</h2>
@@ -567,8 +520,8 @@ const BookingPage: React.FC = () => {
           </div>
         )}
 
-        {/* Step 4: Payment */}
-        {step === 4 && (
+        {/* Step 3: Payment */}
+        {step === 3 && (
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-2xl font-bold text-brand-dark mb-4">Secure Payment</h2>
@@ -616,6 +569,67 @@ const BookingPage: React.FC = () => {
           </div>
         )}
 
+        {/* Step 4: Motion Calendar Scheduling */}
+        {step === 4 && (
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-brand-dark mb-4">Schedule Your Collection</h2>
+              <p className="text-gray-600 mb-4">
+                Our AI-powered scheduling system will find the optimal time for your collection
+              </p>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+                <p className="font-semibold mb-2">Smart Scheduling Features:</p>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>30-minute collection slots with route optimization</li>
+                  <li>Automatic 30-minute buffer between jobs</li>
+                  <li>Maximum 6 bookings per day for quality service</li>
+                  <li>Real-time availability based on location and team capacity</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+              {/* Motion Calendar Embed */}
+              <div className="relative w-full" style={{ height: '600px' }}>
+                <iframe
+                  src="https://calendar.motion.com/meet/1clickclearance/book"
+                  width="100%"
+                  height="100%"
+                  frameBorder="0"
+                  title="Schedule your collection time"
+                  className="w-full h-full"
+                />
+              </div>
+
+              {/* Instructions below calendar */}
+              <div className="p-6 bg-gray-50 border-t">
+                <h4 className="font-semibold text-brand-dark mb-3">Next Steps:</h4>
+                <ol className="list-decimal list-inside space-y-2 text-sm text-gray-700">
+                  <li>Select your preferred date and time from the calendar above</li>
+                  <li>You'll receive a confirmation email with collection details</li>
+                  <li>Our team will contact you 30 minutes before arrival</li>
+                  <li>Payment has been processed - no additional charges on collection day</li>
+                </ol>
+
+                <div className="mt-6 flex flex-col sm:flex-row gap-4">
+                  <button
+                    onClick={handleSchedulingComplete}
+                    className="btn-primary flex-1"
+                  >
+                    Scheduling Complete - View Summary
+                  </button>
+                  <a
+                    href="/contact"
+                    className="btn-secondary flex-1 text-center"
+                  >
+                    Need Help? Contact Us
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Step 5: Confirmation */}
         {step === 5 && (
           <div className="max-w-2xl mx-auto text-center">
@@ -647,8 +661,8 @@ const BookingPage: React.FC = () => {
                   <p><strong>Service:</strong> {bookingData.service?.name}</p>
                 )}
 
-                <p><strong>Date:</strong> {bookingData.date ? format(bookingData.date, 'EEEE, dd MMMM yyyy') : ''}</p>
-                <p><strong>Collection Time:</strong> We'll contact you to arrange</p>
+                <p><strong>Scheduling:</strong> AI-optimized via Motion calendar</p>
+                <p><strong>Collection Time:</strong> As scheduled in the calendar system</p>
                 <p><strong>Amount Paid:</strong> £{bookingData.service?.price}</p>
                 <p><strong>Collection Address:</strong> {bookingData.customerDetails.address}</p>
               </div>
