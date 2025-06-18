@@ -590,18 +590,22 @@ const BookingPage: React.FC = () => {
                       className="w-full h-full"
                     />
 
-                    {/* Disabled Overlay */}
-                    <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
-                      <div className="text-center p-6 bg-white rounded-lg shadow-lg border-2 border-brand-green max-w-sm">
-                        <div className="text-4xl mb-4">🔒</div>
-                        <h4 className="font-bold text-brand-dark mb-2">Calendar Locked</h4>
-                        <p className="text-sm text-gray-600 mb-4">
-                          Complete your payment in the next step to unlock time selection
+                    {/* Semi-transparent Overlay - allows calendar visibility */}
+                    <div className="absolute inset-0 bg-white bg-opacity-20 backdrop-blur-sm flex items-center justify-center pointer-events-auto cursor-not-allowed">
+                      {/* Lock message positioned at top */}
+                      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 text-center p-4 bg-white rounded-lg shadow-lg border-2 border-brand-green max-w-sm">
+                        <div className="text-2xl mb-2">🔒</div>
+                        <h4 className="font-bold text-brand-dark mb-1 text-sm">Calendar Locked</h4>
+                        <p className="text-xs text-gray-600 mb-2">
+                          Complete payment to unlock time selection
                         </p>
                         <div className="text-xs text-gray-500">
-                          Your payment is secured by Stripe
+                          Secured by Stripe
                         </div>
                       </div>
+
+                      {/* Invisible click blocker overlay */}
+                      <div className="absolute inset-0 bg-transparent cursor-not-allowed" />
                     </div>
                   </div>
                 </div>
