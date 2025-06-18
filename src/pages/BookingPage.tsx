@@ -581,14 +581,56 @@ const BookingPage: React.FC = () => {
                 {/* Calendar Preview with Disabled Overlay */}
                 <div className="relative">
                   <div className="relative w-full" style={{ height: '500px' }}>
+                    {/* TODO: Replace with your actual Motion booking URL */}
+                    {/* Current URL is placeholder - needs your real Motion calendar link */}
                     <iframe
-                      src="https://calendar.motion.com/meet/1clickclearance/book"
+                      src="YOUR_MOTION_BOOKING_URL_HERE"
                       width="100%"
                       height="100%"
                       frameBorder="0"
                       title="Preview available collection times"
                       className="w-full h-full"
+                      onError={() => console.log('Motion calendar failed to load')}
                     />
+
+                    {/* Fallback calendar preview if iframe fails */}
+                    <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+                      <div className="text-center p-8">
+                        <div className="text-4xl mb-4">📅</div>
+                        <h3 className="text-xl font-bold text-brand-dark mb-2">Motion Calendar</h3>
+                        <p className="text-gray-600 mb-4">Your AI-optimized scheduling calendar</p>
+                        <div className="bg-white rounded-lg p-6 shadow-md max-w-md">
+                          <div className="grid grid-cols-7 gap-2 text-xs mb-4">
+                            <div className="font-semibold text-center">Mon</div>
+                            <div className="font-semibold text-center">Tue</div>
+                            <div className="font-semibold text-center">Wed</div>
+                            <div className="font-semibold text-center">Thu</div>
+                            <div className="font-semibold text-center">Fri</div>
+                            <div className="font-semibold text-center">Sat</div>
+                            <div className="font-semibold text-center">Sun</div>
+                            {/* Sample calendar days with available slots */}
+                            {Array.from({length: 21}, (_, i) => (
+                              <div key={i} className={`p-2 text-center rounded cursor-pointer hover:bg-brand-green hover:text-white transition-colors ${
+                                i % 3 === 0 ? 'bg-green-100 text-green-700' :
+                                i % 5 === 0 ? 'bg-blue-100 text-blue-700' :
+                                'bg-gray-50 text-gray-400'
+                              }`}>
+                                {i + 1}
+                              </div>
+                            ))}
+                          </div>
+                          <div className="text-xs text-gray-500 mb-4">
+                            • Green: 9am, 1pm, 4pm available
+                            • Blue: 11am, 3pm available
+                            • Gray: No slots available
+                          </div>
+                          <div className="bg-yellow-50 border border-yellow-200 rounded p-3 text-xs text-yellow-800">
+                            <p className="font-semibold mb-1">⚡ Real Motion Calendar Coming Soon</p>
+                            <p>Your actual Motion booking calendar will replace this preview</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
                     {/* Semi-transparent Overlay - allows calendar visibility */}
                     <div className="absolute inset-0 bg-white bg-opacity-20 backdrop-blur-sm flex items-center justify-center pointer-events-auto cursor-not-allowed">
@@ -697,14 +739,55 @@ const BookingPage: React.FC = () => {
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
               {/* Motion Calendar Embed */}
               <div className="relative w-full" style={{ height: '600px' }}>
+                {/* TODO: Replace with your actual Motion booking URL */}
                 <iframe
-                  src="https://calendar.motion.com/meet/1clickclearance/book"
+                  src="YOUR_MOTION_BOOKING_URL_HERE"
                   width="100%"
                   height="100%"
                   frameBorder="0"
                   title="Schedule your collection time"
                   className="w-full h-full"
+                  onError={() => console.log('Motion calendar failed to load')}
                 />
+
+                {/* Fallback calendar if iframe fails */}
+                <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+                  <div className="text-center p-8">
+                    <div className="text-4xl mb-4">📅</div>
+                    <h3 className="text-xl font-bold text-brand-dark mb-2">Motion Calendar</h3>
+                    <p className="text-gray-600 mb-4">Your AI-optimized scheduling calendar</p>
+                    <div className="bg-white rounded-lg p-6 shadow-md max-w-md">
+                      <div className="grid grid-cols-7 gap-2 text-xs mb-4">
+                        <div className="font-semibold text-center">Mon</div>
+                        <div className="font-semibold text-center">Tue</div>
+                        <div className="font-semibold text-center">Wed</div>
+                        <div className="font-semibold text-center">Thu</div>
+                        <div className="font-semibold text-center">Fri</div>
+                        <div className="font-semibold text-center">Sat</div>
+                        <div className="font-semibold text-center">Sun</div>
+                        {/* Sample calendar days with available slots */}
+                        {Array.from({length: 21}, (_, i) => (
+                          <div key={i} className={`p-2 text-center rounded cursor-pointer hover:bg-brand-green hover:text-white transition-colors ${
+                            i % 3 === 0 ? 'bg-green-100 text-green-700' :
+                            i % 5 === 0 ? 'bg-blue-100 text-blue-700' :
+                            'bg-gray-50 text-gray-400'
+                          }`}>
+                            {i + 1}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="text-xs text-gray-500 mb-4">
+                        • Green: 9am, 1pm, 4pm available
+                        • Blue: 11am, 3pm available
+                        • Gray: No slots available
+                      </div>
+                      <div className="bg-yellow-50 border border-yellow-200 rounded p-3 text-xs text-yellow-800">
+                        <p className="font-semibold mb-1">⚡ Real Motion Calendar Coming Soon</p>
+                        <p>Your actual Motion booking calendar will replace this preview</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Instructions below calendar */}
