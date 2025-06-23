@@ -53,15 +53,32 @@ Submitted: ${submittedAt}
       `;
     } else if (formName === 'quote-request-form') {
       emailSubject = `New Large Job Quote Request - ${data.propertyType || 'Property'}`;
+
+      // Check for file attachments (Netlify Forms stores files temporarily and provides URLs)
+      const attachedFiles = [];
+      for (let i = 0; i < 20; i++) {
+        if (data[`file-${i}`]) {
+          attachedFiles.push(`File ${i + 1}: ${data[`file-${i}`]}`);
+        }
+      }
+      if (data.file) {
+        attachedFiles.push(`Main file: ${data.file}`);
+      }
+
       emailContent = `
 New large job quote request received:
 
 Name: ${data.name || 'Not provided'}
+Email: ${data.email || 'Not provided'}
 Phone: ${data.phone || 'Not provided'}
-Property Type: ${data.propertyType || 'Not specified'}
+Address: ${data.address || 'Not provided'}
 Site Address: ${data.siteAddress || 'Not provided'}
+Property Type: ${data.propertyType || 'Not specified'}
+Clearance Type: ${data.clearanceType || 'Not specified'}
+Description: ${data.description || 'Not provided'}
 
-Files Attached: ${data.file ? 'Yes' : 'No'}
+Files Attached: ${attachedFiles.length > 0 ? 'Yes' : 'No'}
+${attachedFiles.length > 0 ? 'File URLs:\n' + attachedFiles.join('\n') : ''}
 
 Submitted: ${submittedAt}
 From: ${data['submitted-from'] || 'Website'}
