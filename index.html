@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+  <!-- Email forms deployment fix - June 22 2025 -->
+  <!-- Netlify Forms now ENABLED - triggering fresh detection -->
+
+<body>
+  <!-- Hidden forms for Netlify Forms detection -->
+  <form name="contact-form-v2" data-netlify="true" style="display: none;">
+    <input type="text" name="name" />
+    <input type="email" name="email" />
+    <input type="tel" name="phone" />
+    <select name="subject">
+      <option value="quote">Request Quote</option>
+      <option value="booking">Existing Booking</option>
+      <option value="general">General Inquiry</option>
+      <option value="partnership">Business Partnership</option>
+    </select>
+    <textarea name="message"></textarea>
+    <input type="hidden" name="submitted-from" />
+    <input type="hidden" name="submission-time" />
+    <input type="hidden" name="form-type" />
+  </form>
+
+  <form name="quote-form" data-netlify="true" style="display: none;">
+    <select name="serviceType">
+      <option value="residential">Residential Clearance</option>
+      <option value="business">Business/Office Clearance</option>
+      <option value="garden">Garden Waste</option>
+      <option value="appliance">Appliance Removal</option>
+      <option value="furniture">Furniture Removal</option>
+    </select>
+    <select name="wasteType">
+      <option value="General Household Items">General Household Items</option>
+      <option value="Furniture & Mattresses">Furniture & Mattresses</option>
+      <option value="Electrical Equipment">Electrical Equipment</option>
+      <option value="Garden Waste">Garden Waste</option>
+      <option value="Office Equipment">Office Equipment</option>
+      <option value="Mixed Waste">Mixed Waste</option>
+    </select>
+    <select name="volumeEstimate">
+      <option value="small">Small (up to 1.5m³)</option>
+      <option value="medium">Medium (1.5-3m³)</option>
+      <option value="large">Large (3-4.5m³)</option>
+      <option value="xlarge">Extra Large (4.5m³+)</option>
+    </select>
+    <input type="text" name="location" />
+    <select name="accessibility">
+      <option value="easy">Easy access (ground floor, parking nearby)</option>
+      <option value="moderate">Moderate access (stairs, limited parking)</option>
+      <option value="difficult">Difficult access (multiple flights, no parking)</option>
+    </select>
+    <select name="urgency">
+      <option value="flexible">Flexible (within 7 days)</option>
+      <option value="urgent">Urgent (within 2 days)</option>
+      <option value="same_day">Same day service</option>
+    </select>
+    <input type="text" name="contactName" />
+    <input type="email" name="contactEmail" />
+    <input type="tel" name="contactPhone" />
+    <input type="text" name="contactAddress" />
+    <input type="number" name="estimatedPrice" />
+    <input type="text" name="quoteId" />
+    <input type="hidden" name="submitted-from" />
+    <input type="hidden" name="submission-time" />
+    <input type="hidden" name="form-type" />
+  </form>
+
+  <form name="quote-request-form" data-netlify="true" data-netlify-honeypot="bot-field" enctype="multipart/form-data" style="display: none;">
+    <input type="hidden" name="bot-field" />
+    <input type="text" name="name" />
+    <input type="email" name="email" />
+    <input type="tel" name="phone" />
+    <textarea name="address"></textarea>
+    <textarea name="siteAddress"></textarea>
+    <select name="propertyType">
+      <option value="">Select property type</option>
+      <option value="1 Bedroom Property">1 Bedroom Property</option>
+      <option value="2 Bedroom Property">2 Bedroom Property</option>
+      <option value="3 Bedroom Property">3 Bedroom Property</option>
+      <option value="4 Bedroom Property">4 Bedroom Property</option>
+      <option value="5+ Bedroom Property">5+ Bedroom Property</option>
+      <option value="Other">Other</option>
+    </select>
+    <textarea name="description"></textarea>
+    <input type="file" name="file" multiple />
+    <input type="hidden" name="clearanceType" />
+    <input type="hidden" name="submitted-from" />
+    <input type="hidden" name="submission-time" />
+    <input type="hidden" name="form-type" />
+  </form>
+
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>
+deploy-timestamp

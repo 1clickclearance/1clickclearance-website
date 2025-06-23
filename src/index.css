@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-green: #4A7C26;
+  --brand-orange: #d5642e;
+  --brand-dark: #3e3d3a;
+  --brand-light: #f8f9fa;
+  --brand-gold: #D4AF37;
+  --brand-black: #1a1a1a;
+  --brand-white: #ffffff;
+}
+
+@layer components {
+  .btn-primary {
+    @apply text-white px-6 py-3 rounded-md font-semibold transition-colors duration-200;
+    background-color: var(--brand-green);
+  }
+
+  .btn-primary:hover {
+    background-color: #3a5f1e;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 rounded-md font-semibold transition-colors duration-200;
+    border: 2px solid var(--brand-green);
+    color: var(--brand-green);
+  }
+
+  .btn-secondary:hover {
+    background-color: #f0f8f0;
+  }
+
+  .text-brand-dark {
+    color: var(--brand-dark);
+  }
+
+  .text-brand-orange {
+    color: var(--brand-orange);
+  }
+
+  .text-brand-green {
+    color: var(--brand-green);
+  }
+
+  .bg-brand-orange {
+    background-color: var(--brand-orange);
+  }
+
+  .bg-brand-dark {
+    background-color: var(--brand-dark);
+  }
+
+  .bg-brand-light {
+    background-color: var(--brand-light);
+  }
+
+  .bg-brand-green {
+    background-color: var(--brand-green);
+  }
+
+  .border-brand-orange {
+    border-color: var(--brand-orange);
+  }
+
+  .border-brand-green {
+    border-color: var(--brand-green);
+  }
+
+  .hover\:bg-brand-orange:hover {
+    background-color: var(--brand-orange);
+  }
+
+  .hover\:text-brand-orange:hover {
+    color: var(--brand-orange);
+  }
+
+  .hover\:text-brand-green:hover {
+    color: var(--brand-green);
+  }
+
+  .hover\:text-brand-dark:hover {
+    color: var(--brand-dark);
+  }
+
+  .focus\:ring-brand-orange:focus {
+    --tw-ring-color: var(--brand-orange);
+  }
+
+  /* Logo watermark styles */
+  .logo-watermark {
+    position: relative;
+  }
+
+  .logo-watermark::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    background-image: url('/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .logo-watermark > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .logo-watermark-large {
+    position: relative;
+  }
+
+  .logo-watermark-large::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    background-image: url('/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.02;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .logo-watermark-large > * {
+    position: relative;
+    z-index: 1;
+  }
+}
